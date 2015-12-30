@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+
 
 class PathBuilder
 {
@@ -19,7 +21,7 @@ class PathBuilder
 
   // helper functions
 
-    void poseCallback(const geometry_msgs::PoseStamped::ConstPtr& pose_msg);
+    void poseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& pose_msg);
 };
 
 PathBuilder::PathBuilder()
@@ -29,10 +31,17 @@ PathBuilder::PathBuilder()
   path_pub_ = nh_.advertise<nav_msgs::Path>("path", 100);
 }
 
-void PathBuilder::poseCallback(const geometry_msgs::PoseStamped::ConstPtr& pose_msg)
+void PathBuilder::poseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& pose_msg)
 {
   path_msg_.header.frame_id = pose_msg->header.frame_id;
-  path_msg_.poses.push_back( *pose_msg );
+
+
+  geometry_msgs::PoseStamped pose_stamped_msg;
+
+  pose_stamped_msg.header = pose_msg->header;
+  pose_stamped_msg.pose = pose_msg->pose.pose;
+
+  path_msg_.poses.push_back( pose_stamped_msg );
 
   path_pub_.publish( path_msg_ );
 }
