@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-mod
 
 find_package(catkin REQUIRED COMPONENTS roscpp cmake_modules geometry_msgs nav_msgs)
 catkin_package(CATKIN_DEPENDS roscpp geometry_msgs nav_msgs )
+include_directories(${catkin_INCLUDE_DIRS})
 
 ADD_EXECUTABLE(pose_to_path src/pose_to_path.cpp)
 TARGET_LINK_LIBRARIES(pose_to_path ${catkin_LIBRARIES})
